@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { hasConflict, getCourseTerm, terms, getCourseNumber } from '../utilities/time.js';
+import React, { useState } from 'react';
+import { getCourseTerm, terms } from '../utilities/time.js';
+import { signInWithGoogle, signOut } from '../utilities/firebase.js';
+import { useUserState } from '../utilities/firebase.js';
 import Course from './course.js';
 
 const CourseList = ({ courses }) => {
@@ -32,18 +34,34 @@ const TermButton = ({term, setTerm, checked}) => (
   </>
 );
 
-const TermSelector = ({term, setTerm}) => (
-  <div className="btn-group">
-  { 
-    Object.values(terms).map(value => (
-      <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />
-    ))
-  }
-  </div>
-);
+const TermSelector = ({term, setTerm}) => {
+    const [user] = useUserState();
+    return (
+      <div className="btn-toolbar justify-content-between">
+        <div className="btn-group">
+        { 
+          Object.values(terms).map(
+            value => <TermButton key={value} term={value} setTerm={setTerm} checked={value === term} />
+          )
+        }
+        </div>
+        { user ? <SignOutButton /> : <SignInButton /> }
+      </div>
+    );
+  };
 
-const toggle = (x, lst) => (
-    lst.includes(x) ? lst.filter(y => y !== x) : [x, ...lst]
+const SignInButton = () => (
+    <button className="btn btn-secondary btn-sm"
+        onClick={() => signInWithGoogle()}>
+      Sign In
+    </button>
+  );
+
+const SignOutButton = () => (
+    <button className="btn btn-secondary btn-sm"
+        onClick={() => signOut()}>
+      Sign Out
+    </button>
   );
 
 export default CourseList;

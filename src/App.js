@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import './App.css';
 import CourseList from './components/courselist';
-import { addScheduleTimes, terms} from './utilities/time.js';
+import { addScheduleTimes} from './utilities/time.js';
 import { useData } from './utilities/firebase.js';
 
 const Banner = ({ title }) => (
